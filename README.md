@@ -1,6 +1,6 @@
 <h1>ExpNo 5 : Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game</h1> 
-<h3>Name:           </h3>
-<h3>Register Number/Staff Id:          </h3>
+<h3>Name:   VASANTH N       </h3>
+<h3>Register Number : 212224110060          </h3>
 <H3>Aim:</H3>
 <p>
     Implement Minimax Search Algorithm for a Simple TIC-TAC-TOE game
@@ -101,7 +101,123 @@ def minimax(game)
         return scores[min_score_index]
     end
 end
+<hr>
+<h3>Program</h3>
+<pre>
+import math
+import time
 
+board = [' ' for _ in range(9)]
+
+def pos(x, y):
+    return x * 3 + y
+
+def print_board():
+    print()
+    for i in range(3):
+        print(" | ".join(board[i*3:(i+1)*3]))
+        if i < 2:
+            print("--+---+--")
+    print()
+
+def check_winner(player):
+    win_conditions = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+    ]
+    for c in win_conditions:
+        if all(board[i] == player for i in c):
+            return True
+    return False
+
+def is_full():
+    return ' ' not in board
+
+def minimax(is_maximizing):
+    if check_winner('X'): return 10
+    if check_winner('O'): return -10
+    if is_full(): return 0
+    if is_maximizing:
+        best_score = -math.inf
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'X'
+                score = minimax(False)
+                board[i] = ' '
+                best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = math.inf
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'O'
+                score = minimax(True)
+                board[i] = ' '
+                best_score = min(score, best_score)
+        return best_score
+
+def best_move():
+    start_time = time.time()
+    best_score = -math.inf
+    move = -1
+    for i in range(9):
+        if board[i] == ' ':
+            board[i] = 'X'
+            score = minimax(False)
+            board[i] = ' '
+            if score > best_score:
+                best_score = score
+                move = i
+    elapsed = time.time() - start_time
+    x, y = divmod(move, 3)
+    print(f"Evaluation time: {elapsed:.6f}s")
+    print(f"Recommended move: X = {x}, Y = {y}")
+    return move
+
+def play_game():
+    print("Welcome to Tic-Tac-Toe (AI = X, You = O)")
+    print("Enter coordinates as X (row) and Y (column), both from 0–2.\n")
+    while True:
+        print_board()
+        move = best_move()
+        x, y = divmod(move, 3)
+        board[move] = 'X'
+        print(f"Insert the X coordinate: {x}")
+        print(f"Insert the Y coordinate: {y}")
+        print_board()
+        if check_winner('X'):
+            print("💻 AI wins!")
+            break
+        elif is_full():
+            print("🤝 Draw!")
+            break
+        try:
+            x = int(input("Insert the X coordinate: "))
+            y = int(input("Insert the Y coordinate: "))
+            if not (0 <= x <= 2 and 0 <= y <= 2):
+                print("Invalid coordinates! Use 0–2.")
+                continue
+            move = pos(x, y)
+            if board[move] != ' ':
+                print("That cell is already taken! Try again.")
+                continue
+            board[move] = 'O'
+        except ValueError:
+            print("Please enter numbers only.")
+            continue
+        if check_winner('O'):
+            print_board()
+            print("🎉 You win!")
+            break
+        elif is_full():
+            print_board()
+            print("🤝 Draw!")
+            break
+
+play_game()
+
+</pre>
 <hr>
 <h2>Sample Input and Output</h2>
 
@@ -110,6 +226,12 @@ end
 ![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/dc06427a-d4ce-43a1-95bd-9acfaefac323)
 ![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/a8a27e2a-6fd4-46a2-afb5-6d27b8556702)
 ![image](https://github.com/natsaravanan/19AI405FUNDAMENTALSOFARTIFICIALINTELLIGENCE/assets/87870499/a2acb6a1-ed8e-42e5-8968-fe805e4b0255)
+<hr>
+<h2>Output</h2>
+
+<img width="689" height="980" alt="Screenshot 2025-11-13 134122" src="https://github.com/user-attachments/assets/2fc3aa43-bd91-48c8-a6ca-dd41077e4546" />
+
+<img width="450" height="856" alt="Screenshot 2025-11-13 134134" src="https://github.com/user-attachments/assets/75e343df-e223-4bad-b918-672e5ff3e7db" />
 
 <hr>
 <h2>Result:</h2>
